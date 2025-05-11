@@ -55,10 +55,25 @@ class ECG500DataLoader:
             self.train_loader = DataLoader(training, batch_sampler = sampler)
 
         self.valid_loader = DataLoader(validation, batch_size = self.config.batch_size_val, shuffle = False)
+        # also test_loader
+        X_test = np.load(self.config.data_folder + self.config.X_test).astype(np.float32)
+        y_test = np.load(self.config.data_folder + self.config.y_test).astype(np.float32)
 
+        if X_test.ndim < 3:
+            X_test = torch.from_numpy(X_test).unsqueeze(2)
+        else:
+            X_test = torch.from_numpy(X_test)
+        y_test = torch.from_numpy(y_test)
+
+        test_dataset = TensorDataset(X_test, y_test)
+        self.test_loader = DataLoader(test_dataset,
+                                      batch_size=self.config.batch_size,
+                                      shuffle=False)
+        # --- end new code ---
         # Number of batches
         self.train_iterations = len(self.train_loader)
         self.valid_iterations = len(self.valid_loader)
+        self.test_iterations = len(self.test_loader)
 
     def finalize(self):
         pass

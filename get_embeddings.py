@@ -14,7 +14,7 @@ if __name__=="__main__":
     model.encoder.eval()
 
     # pick loader (train/test/valid)
-    loader = ECG500DataLoader(config).train_loader
+    loader = ECG500DataLoader(config).test_loader
 
     embs, labels = [], []
     with torch.no_grad():
