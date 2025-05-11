@@ -26,7 +26,7 @@ class RecurrentAEAgent(BaseAgent):
     def __init__(self, config):
         super().__init__(config)
 
-         # Create an instance from the Model
+         # Create an instance from the Model!!!! for encoding and decoding
         self.model = RecurrentAE(self.config)
 
         # Create an instance from the data loader
@@ -105,7 +105,30 @@ class RecurrentAEAgent(BaseAgent):
             if is_best:
                 self.best_valid = perf_valid.sum
             self.save_checkpoint(is_best=is_best)
-
+            
+    def extract_embeddings(self, loader):
+        """
+        Run the encoder over a loader to get (num_samples × latent_dim) embeddings
+        and their labels.
+        """
+        self.model.eval()
+        embs, labs = [], []
+        with torch.no_grad():
+            for x, y in loader:
+                if self.cuda: 
+                    x = x.cuda()
+                # get hidden state from encoder
+                h = self.model.encoder(x)        # (batch, 1, latent_dim) for RNN/GRU
+                h = h.squeeze(1).cpu()           # (batch, latent_dim)
+                embs.append(h)
+                labs.append(y)
+        print("embs:", embs)
+        print("embs[0] shape:", embs[6].shape)
+        print("embs shape:", len(embs))
+        embs = torch.cat(embs, dim=0).numpy()
+        labs = torch.cat(labs, dim=0).numpy()
+        return embs, labs
+    
     def train_one_epoch(self):
         """ One epoch training step """
 

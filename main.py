@@ -21,7 +21,7 @@ def main():
     arg_parser.add_argument('config', help = 'The Configuration file in json format')
     args = arg_parser.parse_args()
     config = process_config(args.config)
-    print(config.agent)
+    #print(config.agent)
     agent_class = globals()[config.agent]
     agent = agent_class(config)
     agent.run()

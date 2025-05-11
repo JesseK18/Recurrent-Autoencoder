@@ -74,14 +74,14 @@ def data_preparation():
         os.remove('data/ECG5000/ECG5000.txt')
 
     # Creating folder where to save numpy data
-    data_path = "data/ECG5000/numpy"
+    data_path = "/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/numpy"
     if not os.path.exists(data_path):
         os.mkdir(data_path)
         print('Create ECG5000/numpy folder')
 
     # Loading data
-    train = pd.read_table('C:/Users/eid0108486/Desktop/Pytorch/my_projects/RecAE/data/ECG5000/ECG5000_TRAIN.txt', sep=r'\s{2,}', engine='python', header=None)
-    test = pd.read_table('C:/Users/eid0108486/Desktop/Pytorch/my_projects/RecAE/data/ECG5000/ECG5000_TEST.txt', sep=r'\s{2,}', engine='python', header=None)
+    train = pd.read_table('/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/ECG5000_TEST.txt', sep=r'\s{2,}', engine='python', header=None)
+    test = pd.read_table('/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/ECG5000_TRAIN.txt', sep=r'\s{2,}', engine='python', header=None)
 
     # Concatenating
     df = pd.concat([train, test])
@@ -142,28 +142,28 @@ def data_preparation():
     y_test = pd.concat([X_test_n.iloc[:, 0], X_test_a.iloc[:, 0]]).values
 
     # Saving training data (only normal instances)
-    np.save('./data/ECG5000/numpy/X_train.npy', X_train)
-    np.save('./data/ECG5000/numpy/y_train.npy', y_train)
+    np.save('/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/numpy/X_train.npy', X_train)
+    np.save('/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/numpy/y_train.npy', y_train)
 
     # Saving training data (normal instances + anomalous)
-    np.save('./data/ECG5000/numpy/X_train_p.npy', X_train_p)
-    np.save('./data/ECG5000/numpy/y_train_p.npy', y_train_p)
+    np.save('/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/numpy/X_train_p.npy', X_train_p)
+    np.save('/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/numpy/y_train_p.npy', y_train_p)
 
     # Saving validation data (only normal instances to control model training)
-    np.save('./data/ECG5000/numpy/X_val.npy', X_val)
-    np.save('./data/ECG5000/numpy/y_val.npy', y_val)
+    np.save('/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/numpy/X_val.npy', X_val)
+    np.save('/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/numpy/y_val.npy', y_val)
     
     # Saving validation data (normal + anomalous instances to perform model selection yes AUC)
-    np.save('./data/ECG5000/numpy/X_val_p.npy', X_val_p)
-    np.save('./data/ECG5000/numpy/y_val_p.npy', y_val_p)
+    np.save('/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/numpy/X_val_p.npy', X_val_p)
+    np.save('/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/numpy/y_val_p.npy', y_val_p)
 
     # Saving validation data (normal + anomalous instances to perform model selection no AUC)
-    np.save('./data/ECG5000/numpy/X_val_p_full.npy', X_val_p_full)
-    np.save('./data/ECG5000/numpy/y_val_p_full.npy', y_val_p_full)
+    np.save('/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/numpy/X_val_p_full.npy', X_val_p_full)
+    np.save('/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/numpy/y_val_p_full.npy', y_val_p_full)
     
     # Saving test data (normal + anomalous instances)
-    np.save('./data/ECG5000/numpy/X_test.npy', X_test)
-    np.save('./data/ECG5000/numpy/y_test.npy', y_test)
+    np.save('/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/numpy/X_test.npy', X_test)
+    np.save('/Users/jessekroll/Desktop/Bachelor Thesis 24/Repos for TSCAR models/Recurrent-Autoencoder/data/ECG5000/numpy/y_test.npy', y_test)
 
     print('Saved data in numpy')
 

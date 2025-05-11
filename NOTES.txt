@@ -1,0 +1,15 @@
+Works when doing the normal pipeline and just running it like in the readme. 
+
+1) adding the only important file to the correct destination
+2) Then using the data_preprocess to create the .pt files correclty in the fomrat the algorithm wants.
+3) Create automatic config wiht create_config 
+3) Running via the command in the README: python
+
+
+Note: 
+hardcoded home_dir, so that should be updated for automation
+
+
+TD: 
+Find out how to only train the encoder and get embeddings as output and stop. 
+
