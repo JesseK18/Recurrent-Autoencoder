@@ -1,6 +1,6 @@
 import torch, numpy as np
 from graphs.models.recurrent_autoencoder import RecurrentAE
-from datasets.ecg5000 import ECG500DataLoader
+from datasets.ecg5000 import ECG500DataLoader, UCRDataLoader
 from utils.config import get_config_from_json
 
 if __name__=="__main__":
@@ -14,7 +14,7 @@ if __name__=="__main__":
     model.encoder.eval()
 
     # pick loader (train/test/valid)
-    loader = ECG500DataLoader(config).test_loader
+    loader = UCRDataLoader(config).test_loader
 
     embs, labels = [], []
     with torch.no_grad():

@@ -1,7 +1,7 @@
 import torch
 from torch import nn, optim
 from graphs.models.recurrent_autoencoder import RecurrentAE
-from datasets.ecg5000 import ECG500DataLoader
+from datasets.ecg5000 import ECG500DataLoader, UCRDataLoader
 from utils.config import get_config_from_json
 
 if __name__=="__main__":
@@ -19,7 +19,8 @@ if __name__=="__main__":
     criterion = nn.MSELoss()
 
     # 4) data
-    loader = ECG500DataLoader(config).train_loader
+    #loader = ECG500DataLoader(config).train_loader
+    loader = UCRDataLoader(config).train_loader
 
     # 5) train loop
     model.train()
