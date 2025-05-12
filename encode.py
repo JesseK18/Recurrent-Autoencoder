@@ -6,6 +6,10 @@ from datasets.ecg5000 import ECG500DataLoader, UCRDataLoader
 from utils.config import get_config_from_json
 from utils.cli_utils import parse_encode_args
 from utils.utils import name_with_datetime
+from graphs.losses.MAELoss import MAELoss
+from graphs.losses.MSELoss import MSELoss
+from utils.metrics import AverageMeter
+from tqdm import tqdm
 
 
 def get_embeddings(model, loader, device):
@@ -29,7 +33,7 @@ def main():
     if args.dataset:
         config.data_folder = f"./data/{args.dataset}/numpy/"
     device = torch.device("cuda" if config.cuda and torch.cuda.is_available() else "cpu")
-
+    print(f"Trainining on {args.dataset}")
     # 2) build model & freeze decoder
     model = RecurrentAE(config).to(device)
     for p in model.decoder.parameters():
@@ -37,7 +41,8 @@ def main():
 
     # 3) optimizer & loss
     optimizer = optim.Adam(model.encoder.parameters(), lr=config.learning_rate)
-    criterion = nn.MSELoss()
+    criterion = MAELoss()
+    #epoch_loss = AverageMeter()
 
     # 4) data loaders
     dl = UCRDataLoader(config)
@@ -46,25 +51,37 @@ def main():
     test_loader  = dl.test_loader
 
     # 5) training loop (encoder only)
+    
     config.max_epoch = args.epochs
     model.train()
     for epoch in range(config.max_epoch):
-        epoch_loss = 0.0
-        for x, _ in train_loader:
+        epoch_loss = AverageMeter()
+        tqdm_batch = tqdm(train_loader, total = len(train_loader),
+                         desc ="Epoch-{}-".format(epoch))
+        # for x, _ in train_loader:
+        for x, _ in tqdm_batch:
             x = x.to(device)
             optimizer.zero_grad()
             x_hat = model(x)
             loss  = criterion(x_hat, x)
             loss.backward()
             optimizer.step()
-            epoch_loss += loss.item()
-        print(f"Epoch {epoch+1}/{config.max_epoch}  loss: {epoch_loss/len(train_loader):.4f}")
-
+            epoch_loss.update(loss.item())
+            #epoch_loss += loss.item()
+        #print(f"Epoch {epoch+1}/{config.max_epoch}  loss: {epoch_loss/len(train_loader):.4f}")
+        avg_loss = epoch_loss.avg  # AverageMeter keeps running average in .avg
+        print(f"Epoch {epoch+1}/{config.max_epoch} – train loss: {avg_loss:.4f}")
     # 6) extract embeddings for downstream tasks
     train_embs, train_labels = get_embeddings(model, train_loader, device)
     val_embs,   val_labels   = get_embeddings(model, val_loader,   device)
     test_embs,  test_labels  = get_embeddings(model, test_loader,  device)
 
+
+    print(f"Train embeddings shape: {train_embs.shape}")
+    print(f"Validation embeddings shape: {val_embs.shape}")
+    print(f"Test embeddings shape: {test_embs.shape}")
+    
+    
     # # 7) save embeddings
     run_dir = 'training/' + args.dataset + '__' + name_with_datetime()
     os.makedirs(run_dir, exist_ok=True)

@@ -149,6 +149,7 @@ class UCRDataLoader:
         self.valid_iterations = len(self.valid_loader)
         self.test_iterations  = len(self.test_loader)
 
-    
+    def finalize(self):
+        pass
 
 

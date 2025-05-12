@@ -14,7 +14,7 @@ from agents.base import BaseAgent
 from utils.metrics import AverageMeter
 from utils.checkpoints import checkpoints_folder
 from utils.config import save_config
-from datasets.ecg5000 import ECG500DataLoader 
+from datasets.ecg5000 import ECG500DataLoader, UCRDataLoader
 from graphs.models.recurrent_autoencoder import RecurrentAE
 from graphs.losses.MAEAUCLoss import MAEAUCLoss
 from graphs.losses.MSEAUCLoss import MSEAUCLoss
@@ -30,8 +30,8 @@ class RecurrentAEAgent(BaseAgent):
         self.model = RecurrentAE(self.config)
 
         # Create an instance from the data loader
-        self.data_loader = ECG500DataLoader(self.config) # CHANGE
-
+        self.data_loader = UCRDataLoader(self.config) #ECG500DataLoader(self.config) # CHANGE
+        print("data_set", self.config.data_folder)
          # Create instance from the loss
         self.loss = {'MSE': MSELoss(),
                      'MAE': MAELoss(),
@@ -122,9 +122,9 @@ class RecurrentAEAgent(BaseAgent):
                 h = h.squeeze(1).cpu()           # (batch, latent_dim)
                 embs.append(h)
                 labs.append(y)
-        print("embs:", embs)
-        print("embs[0] shape:", embs[6].shape)
-        print("embs shape:", len(embs))
+        # print("embs:", embs)
+        # print("embs[0] shape:", embs[6].shape)
+        # print("embs shape:", len(embs))
         embs = torch.cat(embs, dim=0).numpy()
         labs = torch.cat(labs, dim=0).numpy()
         return embs, labs
@@ -267,7 +267,18 @@ class RecurrentAEAgent(BaseAgent):
 
         # Model training
         self.train()
- 
+        
+        # # Extracting embeddings
+        # train_embs, train_labels = self.extract_embeddings(self.data_loader.train_loader)
+        # val_embs, val_labels = self.extract_embeddings(self.data_loader.valid_loader)
+        # test_embs, test_labels = self.extract_embeddings(self.data_loader.test_loader)
+        # # Saving embeddings
+        # np.save(os.path.join(self.checkpoints_path, f"train_embeddings.npy"), train_embs)
+        # np.save(os.path.join(self.checkpoints_path, f"train_labels.npy"), train_labels)
+        # np.save(os.path.join(self.checkpoints_path, f"val_embeddings.npy"), val_embs)
+        # np.save(os.path.join(self.checkpoints_path, f"val_labels.npy"), val_labels) 
+        # np.save(os.path.join(self.checkpoints_path, f"test_embeddings.npy"), test_embs)
+        # np.save(os.path.join(self.checkpoints_path, f"test_labels.npy"), test_labels)
     def finalize(self):
         """
         Finalizes all the operations of the 2 Main classes of the process, the operator and the data loader

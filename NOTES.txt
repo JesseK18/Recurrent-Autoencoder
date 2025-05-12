@@ -13,3 +13,7 @@ hardcoded home_dir, so that should be updated for automation
 TD: 
 Find out how to only train the encoder and get embeddings as output and stop. 
 
+Run: 
+
+
+(rae_env) (base) jessekroll@JesseK Recurrent-Autoencoder % python encode.py --config configs/config_rnn_ae.json --dataset Adiac --output adi --epochs 12
